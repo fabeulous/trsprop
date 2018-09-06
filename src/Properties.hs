@@ -32,9 +32,9 @@ isShallow = all (R.both shallow)
             all (\t -> T.isVar t || T.isGround t) args
 
 isRightReducible :: (Eq f, Ord v) => [Rule f v] -> Bool
-isRightReducible trs = all (reducable . R.rhs) trs
+isRightReducible trs = all (reducible . R.rhs) trs
     where
-        reducable = not . null . fullRewrite trs
+        reducible = not . null . fullRewrite trs
 
 isFlat :: [Rule f v] -> Bool
 isFlat = all $ R.both (\t -> T.isVar t || isConst t)
