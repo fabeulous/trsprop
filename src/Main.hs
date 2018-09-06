@@ -75,7 +75,7 @@ fileFilter p file = do
 usage :: IO ()
 usage = do
     name <- getProgName
-    putStr . unlines $
+    putStrLn . unlines $
         [ "Usage: " ++ name ++ " OPTIONS [properties ..]"
         , ""
         , "OPTIONS:"

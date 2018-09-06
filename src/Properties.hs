@@ -3,24 +3,28 @@ module Properties
     ) where
 
 import Data.Rewriting.Rules
-import qualified Data.Rewriting.Rules as Rules (isGround, isLeftGround, isRightGround
-                                               , isLinear , isRightLinear , isLeftLinear
-                                               )
 import Data.Rewriting.Rule (Rule)
 import qualified Data.Rewriting.Rule as R
 import Data.Rewriting.Term (Term (..))
 import qualified Data.Rewriting.Term as T
 
+
 properties :: [(String, [Rule String String] -> Bool)]
 properties =
     [ ("shallow", isShallow)
+    , ("flat", isFlat)
     , ("ground", isGround)
+    , ("left-ground", isLeftGround)
     , ("right-ground", isRightGround)
     , ("linear", isLinear)
     , ("left-linear", isLeftLinear)
     , ("right-linear", isRightLinear)
     , ("right-reducible", isRightReducible)
-    , ("flat", isFlat)
+    , ("erasing", isErasing)
+    , ("creating", isCreating)
+    , ("expanding", isExpanding)
+    , ("duplicating", isDuplicating)
+    , ("collapsing", isCollapsing)
     ]
 
 
