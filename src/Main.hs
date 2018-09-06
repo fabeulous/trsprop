@@ -20,6 +20,7 @@ data Config = Config { input :: Input
                      , dir :: FilePath
                      }
 
+defaultConfig :: Config
 defaultConfig = Config { input = StdIn
                        , tests = []
                        , dir = "./"
@@ -42,7 +43,8 @@ run cfg = do
     trsFiles <- lines <$> hGetContents inp
     withCurrentDirectory (dir cfg) $
         forM_ trsFiles $ \file -> do
-            res <- fileFilter (\x -> all ($ x) (tests cfg)) file
+            let test x = all ($ x) $ tests cfg
+            res <- fileFilter test file
             when res $ putStrLn file
     hClose inp
 
@@ -70,22 +72,13 @@ fileFilter p file = do
     where
         trs = allRules . rules
 
-properties :: [(String, [Rule String String] -> Bool)]
-properties =
-    [ ("shallow", isShallow)
-    , ("ground", isGround)
-    , ("linear", isLinear)
-    , ("right-reducible", isRightReducible)
-    , ("flat", isFlat)
-    ]
-
 usage :: IO ()
 usage = do
     name <- getProgName
     putStr . unlines $
-        [ "Usage: " ++ name ++ " options [properties ..]"
+        [ "Usage: " ++ name ++ " OPTIONS [properties ..]"
         , ""
-        , "Options:"
+        , "OPTIONS:"
         , "\t-f inputfile\t\t file of newline separated .trs filenames (default: read from stdin)"
         , "\t-d dir\t\t\t directory where .trs files are located (default: .)"
         , ""
