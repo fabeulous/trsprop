@@ -3,14 +3,12 @@ module Main where
 import Control.Monad
 import Data.Rewriting.Problem hiding (map)
 import Data.Rewriting.Rule (Rule)
-import Data.Foldable (traverse_)
-
 import System.Directory (withCurrentDirectory)
 import System.Environment
 import System.Exit
 import System.IO
 
-import Properties hiding (map)
+import Properties
 
 data Input = StdIn | File FilePath
     deriving Show
@@ -32,7 +30,7 @@ main = do
     when (null args) $ usage >> exitFailure
     hSetBuffering stdout LineBuffering
     case parseArgs args of
-      Left err -> putStrLn err >> usage
+      Left err -> putStrLn err >> usage >> exitFailure
       Right cfg -> run cfg
 
 run :: Config -> IO ()
@@ -54,6 +52,7 @@ parseArgs = flip go defaultConfig
         go [] cfg = return cfg
         go ("-f":file:args) cfg = go args cfg { input = File file }
         go ("-d":rootdir:args) cfg = go args cfg { dir = rootdir }
+        go (arg@('-':_):_) _ = Left $ "Unknown Option: \"" ++ arg ++ "\""
         go args cfg =
             go args' =<< ((\p -> cfg { tests = p ++ tests cfg }) <$> props)
             where
