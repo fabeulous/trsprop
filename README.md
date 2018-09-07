@@ -1,6 +1,6 @@
 # trsprop
 
-A small program to filter term-rewrite systems (TRSs) by there properties.
+A small program to filter term rewrite systems (TRSs) by there properties.
 It takes a list of file names, where each file contains a TRS in the [TPDB format](https://www.lri.fr/~marche/tpdb/format.html), and a number of properties.
 `trsprop` then prints all filenames, whose TRSs have all the given properties, to STDOUT.
 

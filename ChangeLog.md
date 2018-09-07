@@ -1,4 +1,4 @@
-# Revision history for trs-properties
+# Revision history for trsprop
 
 ## 0.1.0.0 -- 2018-09-06
 
