@@ -16,22 +16,26 @@ data Input = StdIn | File FilePath
 data Config = Config { input :: Input
                      , tests :: [[Rule String String] -> Bool]
                      , dir :: FilePath
+                     , help :: Bool
                      }
 
 defaultConfig :: Config
 defaultConfig = Config { input = StdIn
                        , tests = []
                        , dir = "./"
+                       , help = False
                        }
 
 main :: IO ()
 main = do
     args <- getArgs
-    when (null args) $ usage >> exitFailure
+    when (null args) $ usage stderr >> exitFailure
     hSetBuffering stdout LineBuffering
     case parseArgs args of
-      Left err -> putStrLn err >> usage >> exitFailure
-      Right cfg -> run cfg
+      Left err -> hPutStrLn stderr err >> exitFailure
+      Right cfg -> do
+          when (help cfg) $ usage stdout >> exitSuccess
+          run cfg
 
 run :: Config -> IO ()
 run cfg = do
@@ -51,6 +55,7 @@ parseArgs = flip go defaultConfig
     where
         go [] cfg = return cfg
         go ("":args) cfg = go args cfg
+        go ("-h":args) cfg = return cfg { help = True }
         go ("-f":file:args) cfg = go args cfg { input = File file }
         go ("-d":rootdir:args) cfg = go args cfg { dir = rootdir }
         go (arg@('-':_):_) _ = Left $ "Unknown Option: \"" ++ arg ++ "\""
@@ -72,10 +77,10 @@ fileFilter p file = do
     where
         trs = allRules . rules
 
-usage :: IO ()
-usage = do
+usage :: Handle -> IO ()
+usage handle = do
     name <- getProgName
-    putStrLn . unlines $
+    hPutStrLn handle . unlines $
         [ "Usage: " ++ name ++ " OPTIONS [properties ..]"
         , ""
         , "OPTIONS:"
