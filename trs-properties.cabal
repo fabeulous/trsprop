@@ -12,7 +12,7 @@ maintainer:          fabian.mitterwallner@uibk.ac.at
 -- copyright:
 -- category:
 build-type:          Simple
-extra-source-files:  ChangeLog.md
+extra-source-files:  ChangeLog.md, README.md
 cabal-version:       >=1.10
 
 
