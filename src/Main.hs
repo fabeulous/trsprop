@@ -50,17 +50,18 @@ parseArgs :: [String] -> Either String Config
 parseArgs = flip go defaultConfig
     where
         go [] cfg = return cfg
+        go ("":args) cfg = go args cfg
         go ("-f":file:args) cfg = go args cfg { input = File file }
         go ("-d":rootdir:args) cfg = go args cfg { dir = rootdir }
         go (arg@('-':_):_) _ = Left $ "Unknown Option: \"" ++ arg ++ "\""
-        go args cfg =
-            go args' =<< ((\p -> cfg { tests = p ++ tests cfg }) <$> props)
+        go args cfg = go args' =<< (addTest cfg <$> props)
             where
                 (propNames, args') = break ((=='-') . head) args
                 noPropErr name = "\"" ++ name ++ "\" is not a known Property"
                 props = traverse (\name -> maybe (Left $ noPropErr name) Right
                                                  (lookup name properties)
                                  ) propNames
+                addTest cfg p = cfg { tests = p ++ tests cfg }
 
 fileFilter :: ([Rule String String] -> Bool) -> FilePath -> IO Bool
 fileFilter p file = do
