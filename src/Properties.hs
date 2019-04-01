@@ -2,6 +2,7 @@ module Properties
     ( properties
     ) where
 
+import Data.Rewriting.CriticalPair as CP
 import Data.Rewriting.Rules hiding (map)
 import Data.Rewriting.Rule (Rule)
 import qualified Data.Rewriting.Rule as R
@@ -27,7 +28,10 @@ properties =
     , ("collapsing", isCollapsing)
     , ("one-rule", isOneRule)
     , ("srs", isSrs)
+    , ("amiguous", isAmiguous)
+    , ("orthogonal", isOrthogonal)
     ]
+
 
 isSrs :: [Rule f v] -> Bool
 isSrs trs = all (T.fold (const True) (\_ ls -> length ls == 1 && and ls)) lhss
@@ -57,4 +61,10 @@ isFlat = all $ R.both (\t -> T.isVar t || isConst t)
     where
         isConst (Fun _ []) = True
         isConst _ = False
+
+isAmiguous :: (Ord v, Eq f) => [Rule f v] -> Bool
+isAmiguous = not . null . CP.cps'
+
+isOrthogonal :: (Ord v, Eq f) => [Rule f v] -> Bool
+isOrthogonal trs = isLeftLinear trs && not (isAmiguous trs)
 
