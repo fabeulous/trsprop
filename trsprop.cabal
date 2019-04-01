@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                trsprop
-version:             0.1.0.0
+version:             0.2.0.0
 -- synopsis:
 -- description:
 license:             MIT
@@ -19,7 +19,7 @@ cabal-version:       >=1.10
 executable trsprop
   main-is:             Main.hs
   other-modules:       Properties
-  build-depends:       base >=4.11 && <4.12
+  build-depends:       base == 4.*
                      , term-rewriting
                      , directory
   hs-source-dirs:      src
