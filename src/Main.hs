@@ -55,7 +55,7 @@ parseArgs = flip go defaultConfig
     where
         go [] cfg = return cfg
         go ("":args) cfg = go args cfg
-        go ("-h":args) cfg = return cfg { help = True }
+        go ("-h":_) cfg = return cfg { help = True }
         go ("-f":file:args) cfg = go args cfg { input = File file }
         go ("-d":rootdir:args) cfg = go args cfg { dir = rootdir }
         go (arg@('-':_):_) _ = Left $ "Unknown Option: \"" ++ arg ++ "\""
@@ -66,7 +66,7 @@ parseArgs = flip go defaultConfig
                 props = traverse (\name -> maybe (Left $ noPropErr name) Right
                                                  (lookup name properties)
                                  ) propNames
-                addTest cfg p = cfg { tests = p ++ tests cfg }
+                addTest c p = c { tests = p ++ tests c }
 
 fileFilter :: ([Rule String String] -> Bool) -> FilePath -> IO Bool
 fileFilter p file = do

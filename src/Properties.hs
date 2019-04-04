@@ -39,14 +39,14 @@ isSrs = all (R.both isString)
         isString = all (\(_,a) -> 1 == a)  . T.funs . T.withArity
 
 isOneRule :: [Rule f v] -> Bool
-isOneRule [r] = True
+isOneRule [_] = True
 isOneRule _   = False
 
 isShallow :: [Rule f v] -> Bool
 isShallow = all (R.both shallow)
     where
         shallow (Var _) = True
-        shallow (Fun f args) =
+        shallow (Fun _ args) =
             all (\t -> T.isVar t || T.isGround t) args
 
 isRightReducible :: (Eq f, Ord v) => [Rule f v] -> Bool
