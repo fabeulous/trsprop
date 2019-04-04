@@ -32,4 +32,7 @@ The follow properties can be filtered for:
   * expanding
   * duplicating
   * collapsing
-
+  * one-rule
+  * srs
+  * amiguous
+  * orthogonal
