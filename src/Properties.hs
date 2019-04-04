@@ -34,11 +34,9 @@ properties =
 
 
 isSrs :: [Rule f v] -> Bool
-isSrs trs = all (T.fold (const True) (\_ ls -> length ls == 1 && and ls)) lhss
+isSrs = all (R.both isString)
     where
-        lhss = map R.lhs trs
-        isUnary (Fun _ [x]) = True
-        isUnary _ = False
+        isString = all (\(_,a) -> 1 == a)  . T.funs . T.withArity
 
 isOneRule :: [Rule f v] -> Bool
 isOneRule [r] = True
